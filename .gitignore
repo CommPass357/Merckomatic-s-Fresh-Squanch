@@ -26,6 +26,7 @@ android/.kotlin/
 android/**/build/
 android/local.properties
 android/keystore.properties
+android/release/
 *.jks
 *.keystore
 *.p12
