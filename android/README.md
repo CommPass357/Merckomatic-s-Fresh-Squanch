@@ -17,6 +17,20 @@ commsfreshsquanch://callback
 Then paste the app's 32-character Client ID into Fresh Squanch. Do not use or
 paste a Spotify Client Secret.
 
+For the Android app setup, use:
+
+```text
+App name: Merckomatic's Fresh Squanch
+App description: Endless Fresh Squanch
+Website: https://github.com/CommPass357/Merckomatic-s-Fresh-Squanch
+Redirect URI: commsfreshsquanch://callback
+API/SDK checkbox: Android
+Android package: com.commsfreshsquanch.app
+Release SHA-1: E7:65:FF:D4:F8:00:23:09:79:20:A3:9A:74:5B:CA:42:33:1E:0F:7F
+```
+
+Do not use the web/local callback (`http://127.0.0.1:3000/...`) for Android.
+
 ## Debug Build
 
 ```powershell

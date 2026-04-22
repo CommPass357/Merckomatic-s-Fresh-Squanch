@@ -18,7 +18,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -64,6 +66,7 @@ private val Green = Color(0xFF1ED760)
 private val Gold = Color(0xFFF0C96A)
 private val Blue = Color(0xFF7BB4FF)
 private val Ink = Color(0xFF071009)
+private const val SPOTIFY_DASHBOARD_URL = "https://developer.spotify.com/dashboard"
 
 @Composable
 fun CfsApp(viewModel: CfsViewModel) {
@@ -90,17 +93,45 @@ private fun LoadingScreen() {
 @Composable
 private fun ConnectScreen(state: CfsUiState, onSaveClientId: (String) -> Unit, onConnect: () -> Unit) {
     var clientId by remember(state.spotifyClientId) { mutableStateOf(state.spotifyClientId) }
+    val uriHandler = LocalUriHandler.current
     Column(
-        modifier = Modifier.fillMaxSize().padding(22.dp),
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(22.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Merckomatic's Fresh Squanch", fontSize = 34.sp, fontWeight = FontWeight.Black, lineHeight = 34.sp)
-        Spacer(Modifier.height(14.dp))
-        Text("Create a Spotify Developer app, add the redirect URI below, paste its Client ID, then connect Spotify. No router ports are needed on Android. This app is not affiliated with Spotify.", color = Muted)
-        Spacer(Modifier.height(14.dp))
+        Text(
+            "Merckomatic's Fresh Squanch",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Black,
+            lineHeight = 28.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text("Minimum requirements", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        Text("1. Spotify Premium account\n2. Spotify Developer app Client ID", color = Muted)
+        Text("Instructions", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        OutlinedButton(onClick = { uriHandler.openUri(SPOTIFY_DASHBOARD_URL) }) {
+            Text("Create API Key")
+        }
+        Text("Copy and paste the Client ID only. Do not paste a Client Secret into this Android app.", color = Muted)
         Text("Redirect URI", color = Muted, fontSize = 12.sp, fontWeight = FontWeight.Bold)
         InfoCard(state.spotifyRedirectUri, "Add this exact value in the Spotify Developer Dashboard.")
-        Spacer(Modifier.height(12.dp))
+        Text("Detailed Instructions", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        SetupStep("1. Log into your Spotify Developer Dashboard using your Spotify account.")
+        OutlinedButton(onClick = { uriHandler.openUri(SPOTIFY_DASHBOARD_URL) }) {
+            Text("Open Spotify Dashboard")
+        }
+        SetupStep(
+            "2. Click Create app at top right.\n" +
+                "App name: Merckomatic's Fresh Squanch\n" +
+                "App description: Endless Fresh Squanch\n" +
+                "Website: https://github.com/CommPass357/Merckomatic-s-Fresh-Squanch\n" +
+                "Redirect URI: ${state.spotifyRedirectUri}\n" +
+                "API/SDK checkbox: Android\n" +
+                "Android package: com.commsfreshsquanch.app\n" +
+                "Release SHA-1: E7:65:FF:D4:F8:00:23:09:79:20:A3:9A:74:5B:CA:42:33:1E:0F:7F"
+        )
+        Text("Add up to 5 Spotify users", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        SetupStep("1. Go to the User Management tab in your Spotify Developer Dashboard.\n2. Add the name and email of each person Spotify should invite.")
         OutlinedTextField(
             value = clientId,
             onValueChange = { clientId = it.trim() },
@@ -108,19 +139,21 @@ private fun ConnectScreen(state: CfsUiState, onSaveClientId: (String) -> Unit, o
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(20.dp))
         Button(onClick = { onSaveClientId(clientId) }, enabled = !state.busy, colors = ButtonDefaults.buttonColors(containerColor = TextMain, contentColor = Ink), shape = RoundedCornerShape(8.dp)) {
             Text("Save Setup", fontWeight = FontWeight.Bold)
         }
-        Spacer(Modifier.height(8.dp))
         Button(onClick = onConnect, enabled = state.setupConfigured && !state.busy, colors = ButtonDefaults.buttonColors(containerColor = Green, contentColor = Ink), shape = RoundedCornerShape(8.dp)) {
             Text("Connect Spotify", fontWeight = FontWeight.Bold)
         }
         if (!state.message.isNullOrBlank()) {
-            Spacer(Modifier.height(14.dp))
             Notice(state.message)
         }
     }
+}
+
+@Composable
+private fun SetupStep(text: String) {
+    Text(text, color = Muted, fontSize = 13.sp, lineHeight = 18.sp)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
