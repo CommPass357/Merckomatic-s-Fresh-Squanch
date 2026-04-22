@@ -1,0 +1,56 @@
+# Public release hygiene
+.env
+.env.*
+!*.env.example
+*.log
+*.out
+*.err
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.tsbuildinfo
+
+# Local tunnel/tools artifacts
+/cloudflared*
+/tools/
+/Start Public Tunnel.bat
+/Start Comm's Fresh Squanch.bat
+/Shutdown Squanchy.bat
+
+# Android local/build artifacts
+android/.android-sdk/
+android/.gradle/
+android/.gradle-user-home/
+android/.kotlin/
+android/**/build/
+android/local.properties
+android/keystore.properties
+*.jks
+*.keystore
+*.p12
+*.pem
+
+# Web/local generated artifacts excluded from Android public releases
+/data/
+/ios/
+/data/node_modules/
+/data/.next/
+/data/dist/
+/data/coverage/
+/data/prisma/dev.db
+/data/prisma/dev.db-journal
+
+# Local planning/audit notes not intended for the Android public repo
+/CURRENT_STATE_AUDIT.md
+/DISTRIBUTION.md
+/FEATURE_MATRIX.md
+/INTEGRATION_PLAN.md
+/PRODUCT_SPEC.md
+/TEST_CHECKLIST.md
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
